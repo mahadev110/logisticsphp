@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Management Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tracking-form {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .tracking-form .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .shipment-card {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: sans-serif;
+        }
+
+        .shipment-card h4 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .ship-locations {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .origin,
+        .destination {
+            width: 48%;
+            font-weight: 500;
+        }
+
+        .shipment-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 8px;
+            font-size: 0.95em;
+            color: #555;
+        }
+
+        .shipment-meta span {
+            white-space: nowrap;
+        }
+
+        #ordersResult {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            padding: 16px;
+        }
+
+        .order-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 3px 16px rgba(60, 90, 140, 0.10);
+            border: 1px solid #f0f2f6;
+            padding: 24px 22px 18px 22px;
+            transition: box-shadow 0.18s;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 10px 32px rgba(30, 46, 98, 0.18);
+        }
+
+        .order-card h4 {
+            margin: 0 0 12px 0;
+            font-size: 1.25em;
+            color: #255bf6;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .order-card p {
+            margin: 10px 0 0 0;
+            font-size: 1em;
+            color: #314160;
+        }
+
+        .order-card code {
+            background: #f5f7fa;
+            color: #1b7f6e;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 0.96em;
+        }
+
+        .order-card small {
+            display: block;
+            color: #8c93ad;
+            margin-top: 10px;
+        }
+
+        .vehicle-card, .driver-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .vehicle-card h4, .driver-card h4 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-available { background: #d4edda; color: #155724; }
+        .status-in_use, .status-assigned { background: #fff3cd; color: #856404; }
+        .status-maintenance, .status-off_duty { background: #f8d7da; color: #721c24; }
+
+        .tracking-history {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .tracking-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #28a745;
+        }
+
+        .tracking-step:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚚 Logistics Portal</h1>
+            <p>Complete Logistics Management System</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('shipments')">📦 Shipments</button>
+            <button class="tab" onclick="showTab('orders')">📋 Orders</button>
+            <button class="tab" onclick="showTab('vehicles')">🚛 Vehicles</button>
+            <button class="tab" onclick="showTab('drivers')">👨‍💼 Drivers</button>
+            <button class="tab" onclick="showTab('tracking')">🔍 Track</button>
+        </div>
+
+        <!-- Shipments Tab -->
+        <div id="shipments" class="tab-content active">
+            <div class="form-section">
+                <h3>📦 Create New Shipment</h3>
+                <form id="shipmentForm">
+                    <div class="form-group">
+                        <label>Origin Address</label>
+                        <input type="text" id="shipment_origin" placeholder="Pickup location" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Destination Address</label>
+                        <input type="text" id="shipment_destination" placeholder="Delivery location" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" step="0.1" id="shipment_weight" placeholder="Package weight">
+                    </div>
+                    <div class="form-group">
+                        <label>Dimensions</label>
+                        <input type="text" id="shipment_dimensions" placeholder="e.g., 30x20x15 cm">
+                    </div>
+                    <button type="submit" class="btn">Create Shipment</button>
+                </form>
+                <div id="shipmentResult" class="result" style="display:none;"></div>
+            </div>
+
+            <div class="form-section">
+                <h3>📦 All Shipments</h3>
+                <button class="btn" onclick="loadShipments()">Load All Shipments</button>
+                <div id="shipmentsResult" class="result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders" class="tab-content">
+            <div class="form-section">
+                <h3>📋 Create New Order</h3>
+                <form id="orderForm">
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="customer_name" placeholder="Full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Customer Email</label>
+                        <input type="email" id="customer_email" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Customer Phone</label>
+                        <input type="tel" id="customer_phone" placeholder="+91-9876543210">
+                    </div>
+                    <div class="form-group">
+                        <label>Pickup Address</label>
+                        <textarea id="pickup_address" rows="3" placeholder="Complete pickup address" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Address</label>
+                        <textarea id="delivery_address" rows="3" placeholder="Complete delivery address" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Amount</label>
+                        <input type="number" step="0.01" id="total_amount" placeholder="0.00">
+                    </div>
+                    <button type="submit" class="btn">Create Order</button>
+                </form>
+                <div id="orderResult" class="result" style="display:none;"></div>
+            </div>
+
+            <div class="form-section">
+                <h3>📋 All Orders</h3>
+                <button class="btn" onclick="loadOrders()">Load All Orders</button>
+                <div id="ordersResult" class="result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Vehicles Tab -->
+        <div id="vehicles" class="tab-content">
+            <div class="form-section">
+                <h3>🚛 Add New Vehicle</h3>
+                <form id="vehicleForm">
+                    <div class="form-group">
+                        <label>Vehicle Number</label>
+                        <input type="text" id="vehicle_number" placeholder="e.g., MH01AB1234" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Type</label>
+                        <select id="vehicle_type" required>
+                            <option value="">Select type</option>
+                            <option value="truck">Truck</option>
+                            <option value="van">Van</option>
+                            <option value="motorcycle">Motorcycle</option>
+                            <option value="car">Car</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Capacity (kg)</label>
+                        <input type="number" step="0.1" id="vehicle_capacity" placeholder="Maximum load capacity">
+                    </div>
+                    <div class="form-group">
+                        <label>Current Location</label>
+                        <input type="text" id="vehicle_location" placeholder="Current location">
+                    </div>
+                    <button type="submit" class="btn">Add Vehicle</button>
+                </form>
+                <div id="vehicleResult" class="result" style="display:none;"></div>
+            </div>
+
+            <div class="form-section">
+                <h3>🚛 All Vehicles</h3>
+                <button class="btn" onclick="loadVehicles()">Load All Vehicles</button>
+                <div id="vehiclesResult" class="result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Drivers Tab -->
+        <div id="drivers" class="tab-content">
+            <div class="form-section">
+                <h3>👨‍💼 Add New Driver</h3>
+                <form id="driverForm">
+                    <div class="form-group">
+                        <label>Driver Name</label>
+                        <input type="text" id="driver_name" placeholder="Full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>License Number</label>
+                        <input type="text" id="license_number" placeholder="Driving license number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="driver_phone" placeholder="+91-9876543210" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="driver_email" placeholder="email@example.com">
+                    </div>
+                    <button type="submit" class="btn">Add Driver</button>
+                </form>
+                <div id="driverResult" class="result" style="display:none;"></div>
+            </div>
+
+            <div class="form-section">
+                <h3>👨‍💼 All Drivers</h3>
+                <button class="btn" onclick="loadDrivers()">Load All Drivers</button>
+                <div id="driversResult" class="result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- Tracking Tab -->
+        <div id="tracking" class="tab-content">
+            <div class="form-section">
+                <h3>🔍 Track Shipment</h3>
+                <form id="trackingForm" class="tracking-form">
+                    <div class="form-group">
+                        <label>Tracking Number</label>
+                        <input type="text" id="tracking_number" placeholder="Enter tracking number" required>
+                    </div>
+                    <button type="submit" class="btn">Track Shipment</button>
+                </form>
+                <div id="trackingResult" class="result" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fixed API Base URL - adjust this to match your actual server path
+        const API_BASE = window.location.origin + '/Logistics_portal';
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function showResult(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `result ${isError ? 'error' : 'success'}`;
+            element.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            try {
+                const config = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+
+                if (data) {
+                    config.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(`${API_BASE}${endpoint}`, config);
+                const result = await response.json();
+
+                return { success: response.ok, data: result, status: response.status };
+            } catch (error) {
+                return { success: false, data: { error: error.message }, status: 0 };
+            }
+        }
+
+        // Shipment form handler
+        document.getElementById('shipmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                origin: document.getElementById('shipment_origin').value,
+                destination: document.getElementById('shipment_destination').value,
+                weight: document.getElementById('shipment_weight').value || null,
+                dimensions: document.getElementById('shipment_dimensions').value || null
+            };
+
+            const result = await apiCall('/shipments/get_shipment.php', 'POST', data);
+            showResult('shipmentResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('shipmentForm').reset();
+            }
+        });
+
+        // Order form handler
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                customer_name: document.getElementById('customer_name').value,
+                customer_email: document.getElementById('customer_email').value || null,
+                customer_phone: document.getElementById('customer_phone').value || null,
+                pickup_address: document.getElementById('pickup_address').value,
+                delivery_address: document.getElementById('delivery_address').value,
+                total_amount: document.getElementById('total_amount').value || 0
+            };
+
+            const result = await apiCall('/orders/create_order.php', 'POST', data);
+            showResult('orderResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('orderForm').reset();
+            }
+        });
+
+        // Vehicle form handler
+        document.getElementById('vehicleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                vehicle_number: document.getElementById('vehicle_number').value,
+                vehicle_type: document.getElementById('vehicle_type').value,
+                capacity: document.getElementById('vehicle_capacity').value || null,
+                current_location: document.getElementById('vehicle_location').value || null
+            };
+
+            const result = await apiCall('/vehicles/get_vehicles.php', 'POST', data);
+            showResult('vehicleResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('vehicleForm').reset();
+            }
+        });
+
+        // Driver form handler
+        document.getElementById('driverForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                name: document.getElementById('driver_name').value,
+                license_number: document.getElementById('license_number').value,
+                phone: document.getElementById('driver_phone').value,
+                email: document.getElementById('driver_email').value || null
+            };
+
+            const result = await apiCall('/drivers/get_drivers.php', 'POST', data);
+            showResult('driverResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('driverForm').reset();
+            }
+        });
+
+        // Tracking form handler
+        document.getElementById('trackingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const trackingNumber = document.getElementById('tracking_number').value;
+            const result = await apiCall(`/shipments/track_shipment.php?tracking_number=${trackingNumber}`);
+            
+            if (result.success && result.data.success) {
+                showTrackingResult(result.data.data);
+            } else {
+                showResult('trackingResult', result.data, true);
+            }
+        });
+
+        function showTrackingResult(trackingData) {
+            const container = document.getElementById('trackingResult');
+            container.innerHTML = '';
+            container.className = 'result success';
+            container.style.display = 'block';
+
+            const shipment = trackingData.shipment;
+            const history = trackingData.tracking_history;
+
+            const trackingDiv = document.createElement('div');
+            trackingDiv.className = 'tracking-history';
+            trackingDiv.innerHTML = `
+                <h4>📦 Tracking: ${shipment.tracking_number}</h4>
+                <p><strong>From:</strong> ${shipment.origin}</p>
+                <p><strong>To:</strong> ${shipment.destination}</p>
+                <p><strong>Status:</strong> <span class="status-badge status-${shipment.status}">${shipment.status}</span></p>
+                <p><strong>Customer:</strong> ${shipment.customer_name || 'N/A'}</p>
+                <hr style="margin: 15px 0;">
+                <h5>📍 Tracking History:</h5>
+            `;
+
+            history.forEach(step => {
+                const stepDiv = document.createElement('div');
+                stepDiv.className = 'tracking-step';
+                stepDiv.innerHTML = `
+                    <div>
+                        <strong>${step.description}</strong><br>
+                        <small>${step.location} - ${step.timestamp}</small>
+                    </div>
+                `;
+                trackingDiv.appendChild(stepDiv);
+            });
+
+            container.appendChild(trackingDiv);
+        }
+
+        // Load functions with improved UI
+        async function loadShipments() {
+            const result = await apiCall('/shipments/get_shipment.php');
+
+            const container = document.getElementById('shipmentsResult');
+            container.innerHTML = '';
+
+            if (!result.success) {
+                container.className = 'result error';
+                container.style.display = 'block';
+                container.textContent = result.data.message || 'Failed to load shipments';
+                return;
+            }
+
+            const shipments = result.data.data;
+
+            if (!shipments || shipments.length === 0) {
+                container.innerHTML = '<p>No shipments found.</p>';
+                container.className = 'result success';
+                container.style.display = 'block';
+                return;
+            }
+
+            container.className = 'result success';
+            container.style.display = 'block';
+
+            shipments.forEach(shipment => {
+                const card = document.createElement('div');
+                card.className = 'shipment-card';
+                card.innerHTML = `
+                    <h4>📦 Tracking #: ${shipment.tracking_number}</h4>
+                    <div class="ship-locations">
+                        <div class="origin"><strong>Origin:</strong> ${shipment.origin}</div>
+                        <div class="destination"><strong>Destination:</strong> ${shipment.destination}</div>
+                    </div>
+                    <div class="shipment-meta">
+                        <span><strong>Status:</strong> <span class="status-badge status-${shipment.status}">${shipment.status}</span></span>
+                        <span><strong>Weight:</strong> ${shipment.weight || 'N/A'} kg</span>
+                        <span><strong>Dimensions:</strong> ${shipment.dimensions || 'N/A'}</span>
+                        <span><strong>Created:</strong> ${new Date(shipment.created_at).toLocaleDateString()}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function loadOrders() {
+            const result = await apiCall('/orders/get_orders.php');
+            
+            if (result.success && result.data.success) {
+                showOrders(result.data.data);
+            } else {
+                showResult('ordersResult', result.data.message || 'Failed to load orders', true);
+            }
+        }
+
+        function showOrders(orders) {
+            const container = document.getElementById('ordersResult');
+            container.innerHTML = '';
+            container.style.display = 'block';
+
+            if (!orders || orders.length === 0) {
+                container.innerHTML = '<p>No orders found.</p>';
+                container.className = 'result success';
+                return;
+            }
+
+            orders.forEach(order => {
+                const card = document.createElement('div');
+                card.className = 'order-card';
+                card.innerHTML = `
+                    <h4>🧾 Order #${order.order_number}</h4>
+                    <p><strong>Customer:</strong> ${order.customer_name} ${order.customer_phone ? `(${order.customer_phone})` : ''}</p>
+                    <p><strong>Email:</strong> ${order.customer_email || 'N/A'}</p>
+                    <p><strong>Pickup:</strong> ${order.pickup_address}</p>
+                    <p><strong>Delivery:</strong> ${order.delivery_address}</p>
+                    <p><strong>Status:</strong> <span class="status-badge status-${order.status}">${order.status}</span></p>
+                    <p><strong>Total:</strong> <span style="color: #0b9444;">₹${order.total_amount || '0.00'}</span></p>
+                    ${order.tracking_number ? `<p><strong>Tracking #:</strong> <code>${order.tracking_number}</code></p>` : ''}
+                    ${order.shipment_status ? `<p><strong>Shipment Status:</strong> <span class="status-badge status-${order.shipment_status}">${order.shipment_status}</span></p>` : ''}
+                    <small>Created: ${new Date(order.created_at).toLocaleDateString()}</small>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function loadVehicles() {
+            const result = await apiCall('/vehicles/get_vehicles.php');
+            
+            const container = document.getElementById('vehiclesResult');
+            container.innerHTML = '';
+
+            if (!result.success) {
+                container.className = 'result error';
+                container.style.display = 'block';
+                container.textContent = result.data.message || 'Failed to load vehicles';
+                return;
+            }
+
+            const vehicles = result.data.data;
+
+            if (!vehicles || vehicles.length === 0) {
+                container.innerHTML = '<p>No vehicles found.</p>';
+                container.className = 'result success';
+                container.style.display = 'block';
+                return;
+            }
+
+            container.className = 'result success';
+            container.style.display = 'block';
+
+            vehicles.forEach(vehicle => {
+                const card = document.createElement('div');
+                card.className = 'vehicle-card';
+                card.innerHTML = `
+                    <h4>🚛 ${vehicle.vehicle_number} (${vehicle.vehicle_type})</h4>
+                    <p><strong>Status:</strong> <span class="status-badge status-${vehicle.status}">${vehicle.status}</span></p>
+                    <p><strong>Capacity:</strong> ${vehicle.capacity || 'N/A'} kg</p>
+                    <p><strong>Location:</strong> ${vehicle.current_location || 'N/A'}</p>
+                    ${vehicle.driver_name ? `<p><strong>Driver:</strong> ${vehicle.driver_name} (${vehicle.driver_phone})</p>` : '<p><strong>Driver:</strong> Not assigned</p>'}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function loadDrivers() {
+            const result = await apiCall('/drivers/get_drivers.php');
+            
+            const container = document.getElementById('driversResult');
+            container.innerHTML = '';
+
+            if (!result.success) {
+                container.className = 'result error';
+                container.style.display = 'block';
+                container.textContent = result.data.message || 'Failed to load drivers';
+                return;
+            }
+
+            const drivers = result.data.data;
+
+            if (!drivers || drivers.length === 0) {
+                container.innerHTML = '<p>No drivers found.</p>';
+                container.className = 'result success';
+                container.style.display = 'block';
+                return;
+            }
+
+            container.className = 'result success';
+            container.style.display = 'block';
+
+            drivers.forEach(driver => {
+                const card = document.createElement('div');
+                card.className = 'driver-card';
+                card.innerHTML = `
+                    <h4>👨‍💼 ${driver.name}</h4>
+                    <p><strong>License:</strong> ${driver.license_number}</p>
+                    <p><strong>Phone:</strong> ${driver.phone}</p>
+                    <p><strong>Email:</strong> ${driver.email || 'N/A'}</p>
+                    <p><strong>Status:</strong> <span class="status-badge status-${driver.status}">${driver.status}</span></p>
+                    ${driver.vehicle_number ? `<p><strong>Vehicle:</strong> ${driver.vehicle_number} (${driver.vehicle_type})</p>` : '<p><strong>Vehicle:</strong> Not assigned</p>'}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize with sample data on page load
+        window.addEventListener('load', () => {
+            console.log('Logistics Portal loaded successfully!');
+            console.log('API Base URL:', API_BASE);
+        });
+    </script>
+</body>
+
+</html>
