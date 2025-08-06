@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Management Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <!-- Header -->
+    <div class="bg-primary text-white py-5 mb-4">
+        <div class="container text-center">
+            <h1 class="display-4 mb-3">
+                <i class="fas fa-truck me-3"></i>
+                Logistics Portal
+            </h1>
+            <p class="lead">Complete Logistics Management System</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-pills nav-fill mb-4" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="shipments-tab" data-bs-toggle="pill" data-bs-target="#shipments"
+                    type="button" role="tab">
+                    <i class="fas fa-box me-2"></i>Shipments
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="orders-tab" data-bs-toggle="pill" data-bs-target="#orders" type="button"
+                    role="tab">
+                    <i class="fas fa-clipboard-list me-2"></i>Orders
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="vehicles-tab" data-bs-toggle="pill" data-bs-target="#vehicles"
+                    type="button" role="tab">
+                    <i class="fas fa-truck me-2"></i>Vehicles
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="drivers-tab" data-bs-toggle="pill" data-bs-target="#drivers" type="button"
+                    role="tab">
+                    <i class="fas fa-user-tie me-2"></i>Drivers
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tracking-tab" data-bs-toggle="pill" data-bs-target="#tracking"
+                    type="button" role="tab">
+                    <i class="fas fa-search me-2"></i>Track
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="mainTabContent">
+            <!-- Shipments Tab -->
+            <div class="tab-pane fade show active" id="shipments" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-box me-2"></i>Create New Shipment</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="shipmentForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Origin Address</label>
+                                        <input type="text" class="form-control" id="shipment_origin"
+                                            placeholder="Pickup location" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Destination Address</label>
+                                        <input type="text" class="form-control" id="shipment_destination"
+                                            placeholder="Delivery location" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Weight (kg)</label>
+                                        <input type="number" step="0.1" class="form-control" id="shipment_weight"
+                                            placeholder="Package weight">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Dimensions</label>
+                                        <input type="text" class="form-control" id="shipment_dimensions"
+                                            placeholder="e.g., 30x20x15 cm">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus me-2"></i>Create Shipment
+                                    </button>
+                                </form>
+                                <div id="shipmentResult" class="alert mt-3" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-warning text-dark">
+                                <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Update Shipment Status</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="updateShipmentForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tracking Number</label>
+                                        <input type="text" class="form-control" id="update_tracking_number"
+                                            placeholder="e.g., TRK-001" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">New Status</label>
+                                        <select class="form-select" id="update_shipment_status" required>
+                                            <option value="">Select status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="confirmed">Confirmed</option>
+                                            <option value="picked_up">Picked Up</option>
+                                            <option value="in_transit">In Transit</option>
+                                            <option value="out_for_delivery">Out for Delivery</option>
+                                            <option value="delivered">Delivered</option>
+                                            <option value="cancelled">Cancelled</option>
+                                            <option value="returned">Returned</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="update_shipment_location"
+                                            placeholder="Current location" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Description</label>
+                                        <textarea class="form-control" id="update_shipment_description" rows="2"
+                                            placeholder="Status update description" required></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fas fa-sync me-2"></i>Update Status
+                                    </button>
+                                </form>
+                                <div id="updateShipmentResult" class="alert mt-3" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Shipments</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-info mb-3" onclick="loadShipments()">
+                                    <i class="fas fa-refresh me-2"></i>Load All Shipments
+                                </button>
+                                <div id="shipmentsResult" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div class="tab-pane fade" id="orders" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Create New Order</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="orderForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Customer Name</label>
+                                        <input type="text" class="form-control" id="customer_name"
+                                            placeholder="Full name" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Customer Email</label>
+                                        <input type="email" class="form-control" id="customer_email"
+                                            placeholder="email@example.com">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Customer Phone</label>
+                                        <input type="tel" class="form-control" id="customer_phone"
+                                            placeholder="+91-9876543210">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Pickup Address</label>
+                                        <textarea class="form-control" id="pickup_address" rows="3"
+                                            placeholder="Complete pickup address" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Delivery Address</label>
+                                        <textarea class="form-control" id="delivery_address" rows="3"
+                                            placeholder="Complete delivery address" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Total Amount</label>
+                                        <input type="number" step="0.01" class="form-control" id="total_amount"
+                                            placeholder="0.00">
+                                    </div>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-plus me-2"></i>Create Order
+                                    </button>
+                                </form>
+                                <div id="orderResult" class="alert mt-3" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-warning text-dark">
+                                <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Update Order Status</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="updateOrderForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Order Number</label>
+                                        <input type="text" class="form-control" id="update_order_number"
+                                            placeholder="e.g., ORD-001" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">New Status</label>
+                                        <select class="form-select" id="update_order_status" required>
+                                            <option value="">Select status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="confirmed">Confirmed</option>
+                                            <option value="processing">Processing</option>
+                                            <option value="shipped">Shipped</option>
+                                            <option value="delivered">Delivered</option>
+                                            <option value="cancelled">Cancelled</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Notes (Optional)</label>
+                                        <textarea class="form-control" id="update_order_notes" rows="2"
+                                            placeholder="Status update notes"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fas fa-sync me-2"></i>Update Status
+                                    </button>
+                                </form>
+                                <div id="updateOrderResult" class="alert mt-3" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Orders</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-info mb-3" onclick="loadOrders()">
+                                    <i class="fas fa-refresh me-2"></i>Load All Orders
+                                </button>
+                                <div id="ordersResult" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicles Tab -->
+            <div class="tab-pane fade" id="vehicles" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-warning text-dark">
+                                <h5 class="mb-0"><i class="fas fa-truck me-2"></i>Add New Vehicle</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="vehicleForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Vehicle Number</label>
+                                        <input type="text" class="form-control" id="vehicle_number"
+                                            placeholder="e.g., MH01AB1234" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Vehicle Type</label>
+                                        <select class="form-select" id="vehicle_type" required>
+                                            <option value="">Select type</option>
+                                            <option value="truck">Truck</option>
+                                            <option value="van">Van</option>
+                                            <option value="motorcycle">Motorcycle</option>
+                                            <option value="car">Car</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Capacity (kg)</label>
+                                        <input type="number" step="0.1" class="form-control" id="vehicle_capacity"
+                                            placeholder="Maximum load capacity">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Current Location</label>
+                                        <input type="text" class="form-control" id="vehicle_location"
+                                            placeholder="Current location">
+                                    </div>
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fas fa-plus me-2"></i>Add Vehicle
+                                    </button>
+                                </form>
+                                <div id="vehicleResult" class="alert mt-3" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Vehicles</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-info mb-3" onclick="loadVehicles()">
+                                    <i class="fas fa-refresh me-2"></i>Load All Vehicles
+                                </button>
+                                <div id="vehiclesResult" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drivers Tab -->
+            <div class="tab-pane fade" id="drivers" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-secondary text-white">
+                                <h5 class="mb-0"><i class="fas fa-user-tie me-2"></i>Add New Driver</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="driverForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">Driver Name</label>
+                                        <input type="text" class="form-control" id="driver_name" placeholder="Full name"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">License Number</label>
+                                        <input type="text" class="form-control" id="license_number"
+                                            placeholder="Driving license number" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="driver_phone"
+                                            placeholder="+91-9876543210" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="driver_email"
+                                            placeholder="email@example.com">
+                                    </div>
+                                    <button type="submit" class="btn btn-secondary">
+                                        <i class="fas fa-plus me-2"></i>Add Driver
+                                    </button>
+                                </form>
+                                <div id="driverResult" class="alert mt-3" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Drivers</h5>
+                            </div>
+                            <div class="card-body">
+                                <button class="btn btn-info mb-3" onclick="loadDrivers()">
+                                    <i class="fas fa-refresh me-2"></i>Load All Drivers
+                                </button>
+                                <div id="driversResult" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tracking Tab -->
+            <div class="tab-pane fade" id="tracking" role="tabpanel">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header bg-dark text-white">
+                                <h5 class="mb-0"><i class="fas fa-search me-2"></i>Track Shipment</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="trackingForm" class="row g-3">
+                                    <div class="col-md-8">
+                                        <label class="form-label">Tracking Number</label>
+                                        <input type="text" class="form-control" id="tracking_number"
+                                            placeholder="Enter tracking number" required>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <button type="submit" class="btn btn-dark w-100">
+                                            <i class="fas fa-search me-2"></i>Track Shipment
+                                        </button>
+                                    </div>
+                                </form>
+                                <div id="trackingResult" class="mt-4" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fixed API Base URL - adjust this to match your actual server path
+        const API_BASE = window.location.origin + '/Logistics_portal';
+
+        function showResult(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `alert ${isError ? 'alert-danger' : 'alert-success'}`;
+
+            if (typeof data === 'object') {
+                element.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } else {
+                element.textContent = data;
+            }
+        }
+
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            try {
+                const config = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+
+                if (data) {
+                    config.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(`${API_BASE}${endpoint}`, config);
+                const result = await response.json();
+
+                return { success: response.ok, data: result, status: response.status };
+            } catch (error) {
+                return { success: false, data: { error: error.message }, status: 0 };
+            }
+        }
+
+        // Shipment form handler
+        document.getElementById('shipmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                origin: document.getElementById('shipment_origin').value,
+                destination: document.getElementById('shipment_destination').value,
+                weight: document.getElementById('shipment_weight').value || null,
+                dimensions: document.getElementById('shipment_dimensions').value || null
+            };
+
+            const result = await apiCall('/shipments/create_shipment.php', 'POST', data);
+            showResult('shipmentResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('shipmentForm').reset();
+                // Refresh shipments list if visible
+                if (document.getElementById('shipmentsResult').style.display !== 'none') {
+                    loadShipments();
+                }
+            }
+        });
+
+        // Update Shipment Status form handler
+        document.getElementById('updateShipmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                tracking_number: document.getElementById('update_tracking_number').value,
+                status: document.getElementById('update_shipment_status').value,
+                location: document.getElementById('update_shipment_location').value,
+                description: document.getElementById('update_shipment_description').value
+            };
+
+            const result = await apiCall('/shipments/update_status.php', 'PUT', data);
+            showResult('updateShipmentResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('updateShipmentForm').reset();
+                // Refresh shipments list if visible
+                if (document.getElementById('shipmentsResult').style.display !== 'none') {
+                    loadShipments();
+                }
+            }
+        });
+
+        // Order form handler
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                customer_name: document.getElementById('customer_name').value,
+                customer_email: document.getElementById('customer_email').value || null,
+                customer_phone: document.getElementById('customer_phone').value || null,
+                pickup_address: document.getElementById('pickup_address').value,
+                delivery_address: document.getElementById('delivery_address').value,
+                total_amount: document.getElementById('total_amount').value || 0
+            };
+
+            const result = await apiCall('/orders/create_order.php', 'POST', data);
+            showResult('orderResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('orderForm').reset();
+                // Refresh orders list if visible
+                if (document.getElementById('ordersResult').style.display !== 'none') {
+                    loadOrders();
+                }
+            }
+        });
+
+        // Update Order Status form handler
+        document.getElementById('updateOrderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                order_number: document.getElementById('update_order_number').value,
+                status: document.getElementById('update_order_status').value,
+                notes: document.getElementById('update_order_notes').value || null
+            };
+
+            const result = await apiCall('/orders/update_status.php', 'PUT', data);
+            showResult('updateOrderResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('updateOrderForm').reset();
+                // Refresh orders list if visible
+                if (document.getElementById('ordersResult').style.display !== 'none') {
+                    loadOrders();
+                }
+            }
+        });
+
+        // Vehicle form handler
+        document.getElementById('vehicleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                vehicle_number: document.getElementById('vehicle_number').value,
+                vehicle_type: document.getElementById('vehicle_type').value,
+                capacity: document.getElementById('vehicle_capacity').value || null,
+                current_location: document.getElementById('vehicle_location').value || null
+            };
+
+            const result = await apiCall('/vehicles/add_vehicle.php', 'POST', data);
+            showResult('vehicleResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('vehicleForm').reset();
+                // Refresh vehicles list if visible
+                if (document.getElementById('vehiclesResult').style.display !== 'none') {
+                    loadVehicles();
+                }
+            }
+        });
+
+        // Driver form handler
+        document.getElementById('driverForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                name: document.getElementById('driver_name').value,
+                license_number: document.getElementById('license_number').value,
+                phone: document.getElementById('driver_phone').value,
+                email: document.getElementById('driver_email').value || null
+            };
+
+            const result = await apiCall('/drivers/add_driver.php', 'POST', data);
+            showResult('driverResult', result.data, !result.success);
+
+            if (result.success) {
+                document.getElementById('driverForm').reset();
+                // Refresh drivers list if visible
+                if (document.getElementById('driversResult').style.display !== 'none') {
+                    loadDrivers();
+                }
+            }
+        });
+
+        // Tracking form handler
+        document.getElementById('trackingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const trackingNumber = document.getElementById('tracking_number').value;
+            const result = await apiCall(`/shipments/track_shipment.php?tracking_number=${trackingNumber}`);
+
+            if (result.success && result.data.success) {
+                showTrackingResult(result.data.data);
+            } else {
+                showResult('trackingResult', result.data, true);
+            }
+        });
+
+        function showTrackingResult(trackingData) {
+            const container = document.getElementById('trackingResult');
+            container.innerHTML = '';
+            container.className = 'alert alert-success';
+            container.style.display = 'block';
+
+            const shipment = trackingData.shipment;
+            const history = trackingData.tracking_history || [];
+
+            container.innerHTML = `
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-box me-2"></i>Tracking: ${shipment.tracking_number}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <p><strong>From:</strong> ${shipment.origin}</p>
+                                <p><strong>To:</strong> ${shipment.destination}</p>
+                                <p><strong>Weight:</strong> ${shipment.weight || 'N/A'} kg</p>
+                                <p><strong>Dimensions:</strong> ${shipment.dimensions || 'N/A'}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Status:</strong> <span class="badge bg-${getStatusColor(shipment.status)}">${shipment.status}</span></p>
+                                <p><strong>Customer:</strong> ${shipment.customer_name || 'N/A'}</p>
+                                <p><strong>Order:</strong> ${shipment.order_number || 'N/A'}</p>
+                                <p><strong>Created:</strong> ${new Date(shipment.created_at).toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6><i class="fas fa-map-marker-alt me-2"></i>Tracking History:</h6>
+                        <div class="timeline">
+                            ${history.length > 0 ? history.map(step => `
+                                <div class="alert alert-light border-start border-success border-4 mb-2">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <strong>${step.description}</strong><br>
+                                            <small class="text-muted">${step.location}</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="badge bg-${getStatusColor(step.status)}">${step.status}</span><br>
+                                            <small class="text-muted">${new Date(step.timestamp).toLocaleString()}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('') : '<div class="alert alert-info">No tracking history available yet.</div>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Status color helper function
+        function getStatusColor(status) {
+            switch (status.toLowerCase()) {
+                case 'delivered': return 'success';
+                case 'in_transit': case 'picked_up': case 'out_for_delivery': return 'info';
+                case 'confirmed': case 'processing': case 'shipped': return 'warning';
+                case 'pending': return 'secondary';
+                case 'cancelled': case 'returned': return 'danger';
+                default: return 'primary';
+            }
+        }
+
+        // Quick status update functions
+        function quickShipmentStatusUpdate(trackingNumber, currentStatus) {
+            document.getElementById('update_tracking_number').value = trackingNumber;
+            document.getElementById('update_shipment_status').value = currentStatus;
+
+            // Switch to shipments tab if not already there
+            const shipmentsTab = document.getElementById('shipments-tab');
+            if (!shipmentsTab.classList.contains('active')) {
+                shipmentsTab.click();
+            }
+
+            // Scroll to update form
+            document.getElementById('updateShipmentForm').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('update_shipment_location').focus();
+        }
+
+        function quickOrderStatusUpdate(orderNumber, currentStatus) {
+            document.getElementById('update_order_number').value = orderNumber;
+            document.getElementById('update_order_status').value = currentStatus;
+
+            // Switch to orders tab if not already there
+            const ordersTab = document.getElementById('orders-tab');
+            if (!ordersTab.classList.contains('active')) {
+                ordersTab.click();
+            }
+
+            // Scroll to update form
+            document.getElementById('updateOrderForm').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('update_order_status').focus();
+        }
+
+        // Load functions with enhanced display
+        async function loadShipments() {
+            const result = await apiCall('/shipments/get_shipment.php');
+            const container = document.getElementById('shipmentsResult');
+            container.innerHTML = '';
+
+            if (!result.success) {
+                container.className = 'alert alert-danger';
+                container.style.display = 'block';
+                container.textContent = result.data.message || 'Failed to load shipments';
+                return;
+            }
+
+            const shipments = result.data.data;
+
+            if (!shipments || shipments.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No shipments found.</div>';
+                container.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'block';
+            const row = document.createElement('div');
+            row.className = 'row';
+
+            shipments.forEach(shipment => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-3';
+                col.innerHTML = `
+                    <div class="card h-100 border-primary">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0"><i class="fas fa-box me-2"></i>Tracking: ${shipment.tracking_number}</h6>
+                            <button class="btn btn-sm btn-light" onclick="quickShipmentStatusUpdate('${shipment.tracking_number}', '${shipment.status}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-6"><strong>From:</strong></div>
+                                <div class="col-6">${shipment.origin}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6"><strong>To:</strong></div>
+                                <div class="col-6">${shipment.destination}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6"><strong>Status:</strong></div>
+                                <div class="col-6"><span class="badge bg-${getStatusColor(shipment.status)}">${shipment.status}</span></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6"><strong>Weight:</strong></div>
+                                <div class="col-6">${shipment.weight || 'N/A'} kg</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-6"><strong>Dimensions:</strong></div>
+                                <div class="col-6">${shipment.dimensions || 'N/A'}</div>
+                            </div>
+                            ${shipment.order_number ? `
+                            <div class="row mb-2">
+                                <div class="col-6"><strong>Order:</strong></div>
+                                <div class="col-6"><code>${shipment.order_number}</code></div>
+                            </div>` : ''}
+                            ${shipment.customer_name ? `
+                            <div class="row mb-2">
+                                <div class="col-6"><strong>Customer:</strong></div>
+                                <div class="col-6">${shipment.customer_name}</div>
+                            </div>` : ''}
+                        </div>
+                        <div class="card-footer text-muted d-flex justify-content-between align-items-center">
+                            <small>Created: ${new Date(shipment.created_at).toLocaleDateString()}</small>
+                            <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('tracking_number').value='${shipment.tracking_number}'; document.getElementById('tracking-tab').click();">
+                                <i class="fas fa-search me-1"></i>Track
+                            </button>
+                        </div>
+                    </div>
+                `;
+                row.appendChild(col);
+            });
+
+            container.appendChild(row);
+        }
+
+        async function loadOrders() {
+            const result = await apiCall('/orders/get_orders.php');
+
+            if (result.success && result.data.success) {
+                showOrders(result.data.data);
+            } else {
+                showResult('ordersResult', result.data.message || 'Failed to load orders', true);
+            }
+        }
+
+        function showOrders(orders) {
+            const container = document.getElementById('ordersResult');
+            container.innerHTML = '';
+            container.style.display = 'block';
+
+            if (!orders || orders.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No orders found.</div>';
+                return;
+            }
+
+            const row = document.createElement('div');
+            row.className = 'row';
+
+            orders.forEach(order => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-3';
+                col.innerHTML = `
+                    <div class="card h-100 border-success">
+                        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0"><i class="fas fa-receipt me-2"></i>Order #${order.order_number}</h6>
+                            <button class="btn btn-sm btn-light" onclick="quickOrderStatusUpdate('${order.order_number}', '${order.status}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Customer:</strong></div>
+                                <div class="col-7">${order.customer_name}</div>
+                            </div>
+                            ${order.customer_phone ? `
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Phone:</strong></div>
+                                <div class="col-7">${order.customer_phone}</div>
+                            </div>` : ''}
+                            ${order.customer_email ? `
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Email:</strong></div>
+                                <div class="col-7">${order.customer_email}</div>
+                            </div>` : ''}
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Status:</strong></div>
+                                <div class="col-7"><span class="badge bg-${getStatusColor(order.status)}">${order.status}</span></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Amount:</strong></div>
+                                <div class="col-7"><span class="text-success fw-bold">₹${parseFloat(order.total_amount || 0).toFixed(2)}</span></div>
+                            </div>
+                            ${order.tracking_number ? `
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Tracking:</strong></div>
+                                <div class="col-7">
+                                    <code>${order.tracking_number}</code>
+                                    <button class="btn btn-sm btn-outline-primary ms-1" onclick="document.getElementById('tracking_number').value='${order.tracking_number}'; document.getElementById('tracking-tab').click();">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>` : ''}
+                            ${order.shipment_status ? `
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Shipment:</strong></div>
+                                <div class="col-7"><span class="badge bg-${getStatusColor(order.shipment_status)}">${order.shipment_status}</span></div>
+                            </div>` : ''}
+                            <hr class="my-2">
+                            <div class="mb-2">
+                                <strong>Pickup:</strong><br>
+                                <small class="text-muted">${order.pickup_address}</small>
+                            </div>
+                            <div class="mb-2">
+                                <strong>Delivery:</strong><br>
+                                <small class="text-muted">${order.delivery_address}</small>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small>Created: ${new Date(order.created_at).toLocaleDateString()}</small>
+                        </div>
+                    </div>
+                `;
+                row.appendChild(col);
+            });
+
+            container.appendChild(row);
+        }
+
+        async function loadVehicles() {
+            const result = await apiCall('/vehicles/get_vehicles.php');
+            const container = document.getElementById('vehiclesResult');
+            container.innerHTML = '';
+
+            if (!result.success) {
+                container.className = 'alert alert-danger';
+                container.style.display = 'block';
+                container.textContent = result.data.message || 'Failed to load vehicles';
+                return;
+            }
+
+            const vehicles = result.data.data;
+
+            if (!vehicles || vehicles.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No vehicles found.</div>';
+                container.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'block';
+            const row = document.createElement('div');
+            row.className = 'row';
+
+            vehicles.forEach(vehicle => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-3';
+                col.innerHTML = `
+                    <div class="card h-100 border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0"><i class="fas fa-truck me-2"></i>${vehicle.vehicle_number}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Type:</strong></div>
+                                <div class="col-7">${vehicle.vehicle_type}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Status:</strong></div>
+                                <div class="col-7"><span class="badge bg-${getStatusColor(vehicle.status || 'available')}">${vehicle.status || 'available'}</span></div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Capacity:</strong></div>
+                                <div class="col-7">${vehicle.capacity || 'N/A'} kg</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Location:</strong></div>
+                                <div class="col-7">${vehicle.current_location || 'N/A'}</div>
+                            </div>
+                            ${vehicle.driver_name ? `
+                            <hr class="my-2">
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Driver:</strong></div>
+                                <div class="col-7">${vehicle.driver_name}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Phone:</strong></div>
+                                <div class="col-7">${vehicle.driver_phone}</div>
+                            </div>` : `
+                            <hr class="my-2">
+                            <div class="text-center">
+                                <span class="text-muted"><i class="fas fa-user-slash me-2"></i>No driver assigned</span>
+                            </div>`}
+                        </div>
+                    </div>
+                `;
+                row.appendChild(col);
+            });
+
+            container.appendChild(row);
+        }
+
+        async function loadDrivers() {
+            const result = await apiCall('/drivers/get_drivers.php');
+            const container = document.getElementById('driversResult');
+            container.innerHTML = '';
+
+            if (!result.success) {
+                container.className = 'alert alert-danger';
+                container.style.display = 'block';
+                container.textContent = result.data.message || 'Failed to load drivers';
+                return;
+            }
+
+            const drivers = result.data.data;
+
+            if (!drivers || drivers.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No drivers found.</div>';
+                container.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'block';
+            const row = document.createElement('div');
+            row.className = 'row';
+
+            drivers.forEach(driver => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-3';
+                col.innerHTML = `
+                    <div class="card h-100 border-secondary">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0"><i class="fas fa-user-tie me-2"></i>${driver.name}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>License:</strong></div>
+                                <div class="col-7">${driver.license_number}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Phone:</strong></div>
+                                <div class="col-7">${driver.phone}</div>
+                            </div>
+                            ${driver.email ? `
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Email:</strong></div>
+                                <div class="col-7">${driver.email}</div>
+                            </div>` : ''}
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Status:</strong></div>
+                                <div class="col-7"><span class="badge bg-${getStatusColor(driver.status || 'available')}">${driver.status || 'available'}</span></div>
+                            </div>
+                            ${driver.vehicle_number ? `
+                            <hr class="my-2">
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Vehicle:</strong></div>
+                                <div class="col-7">${driver.vehicle_number}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-5"><strong>Type:</strong></div>
+                                <div class="col-7">${driver.vehicle_type}</div>
+                            </div>` : `
+                            <hr class="my-2">
+                            <div class="text-center">
+                                <span class="text-muted"><i class="fas fa-truck-slash me-2"></i>No vehicle assigned</span>
+                            </div>`}
+                        </div>
+                    </div>
+                `;
+                row.appendChild(col);
+            });
+
+            container.appendChild(row);
+        }
+
+        // Auto-refresh functionality
+        let autoRefreshInterval;
+
+        function startAutoRefresh() {
+            // Refresh every 30 seconds if any data is currently displayed
+            autoRefreshInterval = setInterval(() => {
+                if (document.getElementById('shipmentsResult').style.display !== 'none') {
+                    loadShipments();
+                }
+                if (document.getElementById('ordersResult').style.display !== 'none') {
+                    loadOrders();
+                }
+                if (document.getElementById('vehiclesResult').style.display !== 'none') {
+                    loadVehicles();
+                }
+                if (document.getElementById('driversResult').style.display !== 'none') {
+                    loadDrivers();
+                }
+            }, 30000); // 30 seconds
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            console.log('Complete Logistics Portal loaded successfully!');
+            console.log('API Base URL:', API_BASE);
+            
+            // Start auto-refresh
+            startAutoRefresh();
+        });
+
+        // Stop auto-refresh when page is hidden
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoRefresh();
+            } else {
+                startAutoRefresh();
+            }
+        });
+
+        // Toast notification system
+        function showToast(message, type = 'success') {
+            const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            const bsToast = new bootstrap.Toast(toast, { delay: 5000 });
+            bsToast.show();
+            
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        function createToastContainer() {
+            const container = document.createElement('div');
+            container.id = 'toastContainer';
+            container.className = 'toast-container position-fixed top-0 end-0 p-3';
+            container.style.zIndex = '9999';
+            document.body.appendChild(container);
+            return container;
+        }
+
+        // Enhanced API call with toast notifications
+        const originalApiCall = apiCall;
+        apiCall = async function(endpoint, method = 'GET', data = null) {
+            const result = await originalApiCall(endpoint, method, data);
+            
+            // Show success/error toasts for form submissions
+            if (method !== 'GET') {
+                if (result.success) {
+                    showToast(`✅ ${getActionMessage(endpoint)} successful!`, 'success');
+                } else {
+                    showToast(`❌ ${getActionMessage(endpoint)} failed: ${result.data.message || 'Unknown error'}`, 'danger');
+                }
+            }
+            
+            return result;
+        };
+
+        function getActionMessage(endpoint) {
+            if (endpoint.includes('create_shipment')) return 'Shipment creation';
+            if (endpoint.includes('create_order')) return 'Order creation';
+            if (endpoint.includes('add_vehicle')) return 'Vehicle addition';
+            if (endpoint.includes('add_driver')) return 'Driver addition';
+            if (endpoint.includes('update_status')) return 'Status update';
+            return 'Operation';
+        }
+    </script>
+</body>
+
+</html>
